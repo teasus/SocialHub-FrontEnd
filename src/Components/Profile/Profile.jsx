@@ -1,0 +1,137 @@
+import React, { useState } from 'react'
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { useNavigate } from 'react-router-dom';
+import { Avatar, Button } from '@mui/material';
+
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import { Verified } from '@mui/icons-material';
+
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import PostCard from '../HomeSection/PostCard';
+
+const Profile = () => {
+
+    const navigate = useNavigate();
+    const handleBack = () => navigate(-1);
+
+
+    const [tabValue, setTabValue] = useState('1');
+
+
+    const openProfileModal = () => {
+        console.log("open profile for edit");
+    }
+
+    const handleFollowUser = () => {
+        console.log("handle Follow User");
+    }
+
+    const handleTabChange = (event, newValue) => {
+        setTabValue(newValue);
+        if (newValue === 4) {
+            console.log("likes tweet");
+        }
+        else if (newValue === 1) {
+            console.log("user tweet");
+        }
+
+    };
+
+
+    return (
+        <div>
+            <section className={`z-50 flex items-center sticky top-0 bg-opacity-95`}>
+                <KeyboardBackspaceIcon className='cursor-pointer' onClick={handleBack} />
+                <h1 className='py-5 text-xl font-bold opacity-90 ml-5'>Code With Rashid</h1>
+            </section>
+
+            <section>
+                <img className='w-[200%] h-[13rem] object-cover'
+                    src='https://cdn.pixabay.com/photo/2024/02/13/22/20/flower-meadow-8572000_640.jpg'
+                    alt='pic' />
+            </section>
+            <section>
+                <div className='flex justify-between items-start mt-5 h-[5rem]'>
+                    <Avatar alt='alt code'
+                        className='transform -translate-y-20'
+                        sx={{ width: "10rem", height: "10rem", border: "4px solid white" }} />
+
+                    <Button onClick={openProfileModal} variant='contained' sx={{ borderRadius: "20px" }}>
+                        Edit Profile
+                    </Button>
+                    <Button onClick={handleFollowUser} variant='contained' sx={{ borderRadius: "20px" }}>
+                        {true ? "Follow" : "Unfollow"}
+                    </Button>
+                </div>
+                <div>
+                    <div className='flex items-center'>
+                        <h1 className='font-bold'>Ahmed Rashid</h1>
+                        {true && <Verified />}
+                    </div>
+                    <h1 className='text-gray-500'>@AhmedRashid007</h1>
+                </div>
+                <div className='space-y-3 mt-2'>
+                    <p>Hello i am ahmed rashid. This is my full stack project which is SocialHub</p>
+                    <div className='py-1 flex space-x-5'>
+                        <div className='flex items-center text-gray-500'>
+                            <BusinessCenterIcon />
+                            <p className='ml-2'>Education</p>
+                        </div>
+                        <div className='flex items-center text-gray-500'>
+                            <LocationOnIcon />
+                            <p className='ml-2'>India</p>
+                        </div>
+                        <div className='flex items-center text-gray-500'>
+                            <CalendarMonthIcon />
+                            <p className='ml-2'>Joined Jun 2022</p>
+                        </div>
+
+
+                    </div>
+                    <div className='flex items-center space-x-5 '>
+                        <div className='flex items-center space-x-1 '>
+
+                            <span>502</span>
+                            <span>Followers</span>
+
+                        </div>
+                        <div className='flex items-center space-x-1 '>
+
+                            <span>654</span>
+                            <span>Following</span>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section className=' py-5'> 
+                <Box  sx={{ width: '100%', typography: 'body1' }}>
+                    <TabContext value={tabValue}>
+                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                            <TabList onChange={handleTabChange} aria-label="lab API tabs example">
+                                <Tab label="Posts" value="1" />
+                                <Tab label="Replies" value="2" />
+                                <Tab label="Media" value="3" />
+                                <Tab label="Likes" value="4" />
+                            </TabList>
+                        </Box>
+                        <TabPanel value="1">
+                            {[1,1,1,1].map(item => <PostCard />)}
+                        </TabPanel>
+                        <TabPanel value="2">User Replies</TabPanel>
+                        <TabPanel value="3">User Media</TabPanel>
+                        <TabPanel value="4">User Likes</TabPanel>
+                    </TabContext>
+                </Box>
+            </section>
+        </div >
+    )
+}
+
+export default Profile;
