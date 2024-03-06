@@ -14,19 +14,26 @@ import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PostCard from '../HomeSection/PostCard';
+import ProfileModal from './ProfileModal';
 
 const Profile = () => {
+
+
+    const [openProfileModal, setOpenProfileModal] = useState(false);
+    const handleOpenProfileModal = () => setOpenProfileModal(true);
+    const handleClose = () => setOpenProfileModal(false);
+    
+
+    const [tabValue, setTabValue] = useState('1');
 
     const navigate = useNavigate();
     const handleBack = () => navigate(-1);
 
 
-    const [tabValue, setTabValue] = useState('1');
 
 
-    const openProfileModal = () => {
-        console.log("open profile for edit");
-    }
+
+  
 
     const handleFollowUser = () => {
         console.log("handle Follow User");
@@ -48,7 +55,7 @@ const Profile = () => {
         <div>
             <section className={`z-50 flex items-center sticky top-0 bg-opacity-95`}>
                 <KeyboardBackspaceIcon className='cursor-pointer' onClick={handleBack} />
-                <h1 className='py-5 text-xl font-bold opacity-90 ml-5'>Code With Rashid</h1>
+                <h1 className='py-5 text-xl font-bold opacity-90 ml-5'>Profile</h1>
             </section>
 
             <section>
@@ -62,7 +69,7 @@ const Profile = () => {
                         className='transform -translate-y-20'
                         sx={{ width: "10rem", height: "10rem", border: "4px solid white" }} />
 
-                    <Button onClick={openProfileModal} variant='contained' sx={{ borderRadius: "20px" }}>
+                    <Button onClick={handleOpenProfileModal} variant='contained' sx={{ borderRadius: "20px" }}>
                         Edit Profile
                     </Button>
                     <Button onClick={handleFollowUser} variant='contained' sx={{ borderRadius: "20px" }}>
@@ -110,8 +117,8 @@ const Profile = () => {
                     </div>
                 </div>
             </section>
-            <section className=' py-5'> 
-                <Box  sx={{ width: '100%', typography: 'body1' }}>
+            <section className=' py-5'>
+                <Box sx={{ width: '100%', typography: 'body1' }}>
                     <TabContext value={tabValue}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <TabList onChange={handleTabChange} aria-label="lab API tabs example">
@@ -122,13 +129,16 @@ const Profile = () => {
                             </TabList>
                         </Box>
                         <TabPanel value="1">
-                            {[1,1,1,1].map(item => <PostCard />)}
+                            {[1, 1, 1, 1].map(item => <PostCard />)}
                         </TabPanel>
                         <TabPanel value="2">User Replies</TabPanel>
                         <TabPanel value="3">User Media</TabPanel>
                         <TabPanel value="4">User Likes</TabPanel>
                     </TabContext>
                 </Box>
+            </section>
+            <section>
+                <ProfileModal open={openProfileModal} handleClose={handleClose} />
             </section>
         </div >
     )

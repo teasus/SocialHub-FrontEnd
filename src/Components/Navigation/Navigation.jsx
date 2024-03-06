@@ -61,7 +61,7 @@ const Navigation = () => {
 
             </div>
             <div className=''>
-                <div className='flex items-center w-100 '>
+                <div className='flex items-center w-100 ' onClick={()=>navigate(`/profile/${6}`) } >
                     <div className='flex items-center space-x-3 grow '>
                         <Avatar alt='username' />
                         <div className='flex-column'>

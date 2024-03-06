@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import RepeatIcon from '@mui/icons-material/Repeat';
 import { Avatar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -12,8 +12,13 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import ReplyModal from './ReplyModal';
 const PostCard = () => {
     const navigate = useNavigate(``);
+
+    const [openReplyModal, setOpenReplyModal] = useState(false);
+    const handleOpenReplyModal = () => setOpenReplyModal(true);
+    const handleCloseReplyModal = () => setOpenReplyModal(false);
 
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -33,26 +38,21 @@ const PostCard = () => {
         handleClose();
     };
 
-    ///reply modal
-    const handleOpenReplyModal = () => {
-        console.log("reply modal open");
-    }
+   
+  
 
     //create retwwet 
     const handleCreateRetweet = () => {
         console.log("retweet");
     }
     //handle likes
-    const handleLikeTweet =() =>{
+    const handleLikeTweet = () => {
         console.log("Like tweet");
     }
 
     return (
-        <div className=''>
-            {/* <div>
-            <RepeatIcon />
-            <p>Reshare</p>
-        </div> */}
+        <React.Fragment>
+
             <div className='flex space-x-5 mt-4'>
                 <Avatar
                     alt="username"
@@ -93,7 +93,7 @@ const PostCard = () => {
                         </div>
                     </div>
 
-                    <div className='mt-2'>
+                    <div className='mt-2' onClick={() => navigate(`/post/${6}`)} >
                         <div className='cursor-pointer'>
                             <p className='mb-2 p-0'>Full stack project with spring boot and react</p>
                             <img
@@ -102,10 +102,14 @@ const PostCard = () => {
                                 alt="" />
 
                         </div>
+                        {/* icons under post  */}
                         <div className='py-5 flex flex-wrap justify-between items-center'>
                             <div className='space-x-3 flex items-center text-gray-600 '>
                                 <ChatBubbleOutlineIcon className='cursor-pointer'
-                                    onClick={handleOpenReplyModal}
+                                    onClick={(e)=> {
+                                        handleOpenReplyModal();
+                                        e.stopPropagation() 
+                                    }}
                                 />
                                 <p>23</p>
                             </div>
@@ -126,15 +130,19 @@ const PostCard = () => {
                             </div>
                             <div className={`${true} "text-pink-600" : "text-gray-600" space-x-3 flex item-center  `}>
                                 <FileUploadIcon className='cursor-pointer' onClick={handleOpenReplyModal} />
-                              
+
                             </div>
 
                         </div>
 
+
                     </div>
                 </div>
             </div>
-        </div>
+            <section>
+                <ReplyModal open={openReplyModal} handleClose={handleCloseReplyModal} />
+            </section>
+        </React.Fragment>
     )
 }
 
