@@ -3,8 +3,15 @@ import SearchIcon from '@mui/icons-material/Search';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { Button } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { Subscript } from '@mui/icons-material';
+import SubscriptionModal from '../SubscriptionModal/SubscriptionModal';
+import { useState } from 'react';
 
 const RightPart = () => {
+
+    const [openSubscriptionModal, setOpenSubscriptionModal] = useState(false);
+    const handleOpenSubscriptionModal = () => setOpenSubscriptionModal(true);
+    const handleCloseSubscriptionModal = () => setOpenSubscriptionModal(false);
 
 
     const handleChangeTheme = () => {
@@ -32,7 +39,7 @@ const RightPart = () => {
                     Get Verfied
                 </h1>
                 <h1 lassName='my-2 font-bold'>Subscribe to unlock new features</h1>
-                <Button onClick={getVerified} sx={{
+                <Button onClick={handleOpenSubscriptionModal} sx={{
                     padding: "10px", paddingX: "20px",
                     borderRadius: "25px"
                 }}>
@@ -60,6 +67,9 @@ const RightPart = () => {
                     </div>
                 )}
 
+            </section>
+            <section>
+                <SubscriptionModal open={openSubscriptionModal} handleClose={handleCloseSubscriptionModal}  />
             </section>
         </div>
     )
