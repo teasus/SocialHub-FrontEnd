@@ -1,6 +1,5 @@
 import React from 'react'
-import Container from '@mui/material/Container'
-import { TextField } from '@mui/material'
+import { Button, Grid, TextField } from '@mui/material'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
@@ -9,7 +8,7 @@ const validationSchema = Yup.object().shape({
     password: Yup.string().required("password is required")
 })
 const SignInForm = () => {
-
+    const dispatch = useDis
     const formik = useFormik({
         initialValues: {
             email: "", password: "",
@@ -20,14 +19,14 @@ const SignInForm = () => {
         }
     })
     return (
-        <form action="">
+        <form onSubmit={formik.handleSubmit}>
 
-            <Grid comtainer spacing={2} >
+            <Grid container spacing={2} >
                 <Grid item xs={12} >
                     <TextField fullWidth
                         label="Email"
                         name='email'
-                        variant='outline'
+                        variant="outlined"
                         size='large'
                         value={formik.values.email}
                         onChange={formik.handleChange}
@@ -40,7 +39,7 @@ const SignInForm = () => {
                     <TextField fullWidth
                         label="Password"
                         name='password'
-                        variant='outline'
+                        variant="outlined"
                         size='large'
                         value={formik.values.password}
                         onChange={formik.handleChange}
@@ -48,6 +47,13 @@ const SignInForm = () => {
                         error={formik.touched.password && Boolean(formik.errors.password)}
                         helperText={formik.touched.password && formik.errors.password}
                     />
+                </Grid>
+                <Grid className="mt-20" item xs={12}  >
+                    <Button sx={{ borderRadius: "29px", py: "15px", bgcolor: "blue" }} type="submit"
+                        size='large'
+                        fullWidth
+                        variant='contained'
+                    >SignIn</Button>
                 </Grid>
             </Grid>
         </form>
