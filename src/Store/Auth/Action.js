@@ -1,10 +1,14 @@
 import axios from "axios"
 import { API_BASE_URL } from "../../config/api";
 import { GET_USER_PROFILE_FAILURE, GET_USER_PROFILE_SUCCESS, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, REGISTER_USER_FAILURE, REGISTER_USER_SUCCESS } from "./ActionType";
+import { useDispatch } from 'react-redux';
+
 
 export const loginUser = (loginData) => async (dispatch) => {
+   
     try {
         const { data } = await axios.post(`${API_BASE_URL}/auth/signin`, loginData);
+        console.log("log in user : " ,data);
 
         if (data.jwt) {
             localStorage.setItem("jwt", data.jwt);
@@ -22,6 +26,7 @@ export const loginUser = (loginData) => async (dispatch) => {
 export const registerUser = (registerData) => async (dispatch) => {
     try {
         const { data } = await axios.post(`${API_BASE_URL}/auth/signup`, registerData);
+        console.log("Sign up user : " , data);
 
         if (data.jwt) {
             localStorage.setItem("jwt", data.jwt);
@@ -35,7 +40,7 @@ export const registerUser = (registerData) => async (dispatch) => {
     }
 }
 
-export const getUserProfile = () => async (jwt) => {
+export const getUserProfile = (jwt) => async (dispatch) => {
     try {
         const { data } = await axios.get(`${API_BASE_URL}/api/profile`, {
             headers: {
@@ -43,9 +48,7 @@ export const getUserProfile = () => async (jwt) => {
             }
         });
 
-        if (data.jwt) {
-            localStorage.setItem("jwt", data.jwt);
-        }
+      
 
         dispatch({ type: GET_USER_PROFILE_SUCCESS, payload: data });
 

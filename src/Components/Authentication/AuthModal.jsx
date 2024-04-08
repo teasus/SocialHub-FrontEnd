@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -22,10 +23,12 @@ const style = {
 export default function AuthModal({ open, handleClose }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const [pathh, usePathh] = useState('/');
 
   const handleNavigate = () => {
     const path = location.pathname === "/signup" ? "/signin" : "/signup";
     navigate(path);
+    console.log(location.pathname);
   }
 
 

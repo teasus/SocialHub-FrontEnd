@@ -9,7 +9,7 @@ import PostDetails from '../PostDetails/PostDetails';
 const HomePage = () => {
   return (
     <Grid container className='px-5 lg:px-36 justify-between'>
-
+      
       {/* xs=small screen lg = large screen */}
       {/* left */}
       <Grid item xs={0} m={0} lg={2.5} className='hidden lg:block w-full relative '>

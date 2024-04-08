@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { Button, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { useDispatch } from 'react-redux';
+import { registerUser } from '../../Store/Auth/Action';
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid Email").required("Email is Required"),
@@ -27,6 +29,7 @@ const months = [
     // { value: 1, label: "January" },
 ]
 const SignUpForm = () => {
+    const dispatch = useDispatch();
     const formik = useFormik({
         initialValues: {
             email: "",
@@ -44,6 +47,7 @@ const SignUpForm = () => {
             const dateOfBirth = `${year}-${month}-${day}`;
             values.dateOfBirth = dateOfBirth;
             console.log("form values", values);
+            dispatch(registerUser(values));
         }
     })
     const handleDateChange = (name) => (event) => {
