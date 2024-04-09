@@ -8,11 +8,16 @@ import { Avatar, Button } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useSelector, useDispatch } from 'react-redux';
+import { LOGOUT } from '../../Store/Auth/ActionType';
+import { logout } from '../../Store/Auth/Action';
 
 const Navigation = () => {
 
     const navigate = useNavigate();
-
+    const jwt = localStorage.getItem("jwt");
+    const { auth } = useSelector(store => store);
+    const dispatch = useDispatch();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -26,6 +31,7 @@ const Navigation = () => {
     };
     const handleLogout = () => {
         console.log("log-out");
+        dispatch(logout());
         handleClose();
     };
     return (
@@ -37,7 +43,7 @@ const Navigation = () => {
 
                     </div>
                     <div className='flex items-center '>
-                        <img class="h-6"  width="90" src={logoText} alt='' />
+                        <img class="h-6" width="90" src={logoText} alt='' />
                     </div>
                 </div>
                 <div className='space-y-6 mt-3 '>
@@ -61,15 +67,15 @@ const Navigation = () => {
 
             </div>
             <div className=''>
-                <div className='flex items-center w-100 ' onClick={()=>navigate(`/profile/${6}`) } >
-                    <div className='flex items-center space-x-3 grow '>
+                <div className='flex items-center w-100 ' >
+                    <div className='flex items-center space-x-3 grow cursor-pointer '  onClick={() => navigate(`/profile/${6}`)} >
                         <Avatar alt='username' />
-                        <div className='flex-column'>
-                            <p className='text-center'>Ahmed Rashid</p>
-                            <p className='text-center text-gray-500'>@AhmedRas01</p>
+                        <div className='flex-column'  >
+                            <p className='text-center'>{auth.user?.fullName}</p>
+                            <p className='text-center text-gray-500'>@{auth.user?.fullName.split(' ').join("_").toLowerCase()}</p>
                         </div>
                     </div>
-                    <div className=''>
+                    <div className=''  >
 
                         <div>
                             <MoreHorizIcon

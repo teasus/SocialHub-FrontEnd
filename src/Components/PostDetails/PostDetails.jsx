@@ -1,17 +1,31 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Divider } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import PostCard from '../HomeSection/PostCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { findTweetsByID } from '../../Store/Tweet/Action';
 const PostDetails = () => {
-    
-    const navigate = useNavigate(``);
 
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const {id}= useParams();
+    const {tweet} = useSelector(state=>state);
+
+    useEffect(() => {
+        if(id){
+            dispatch(findTweetsByID(id));
+        }
+    }, [[]]
+
+    )
 
    
-    
-   
+
+
+
     const handleBack = () => navigate(-1);
     return (
         <div className=''>
@@ -19,9 +33,9 @@ const PostDetails = () => {
             <RepeatIcon />
             <p>Reshare</p>
         </div> */}
-        
-        
-        {/* back btn */}
+
+
+            {/* back btn */}
 
             <section className={`z-50 flex items-center sticky top-0 bg-opacity-100 bg-white`}>
                 <KeyboardBackspaceIcon className='cursor-pointer' onClick={handleBack} />
@@ -30,11 +44,11 @@ const PostDetails = () => {
 
             {/* postCard */}
             <section className=' flex items-center '>
-                <PostCard />
-                <Divider sx={{margin:"2rem 0rem"}} />
+                <PostCard item={tweet.tweet} />
+                <Divider sx={{ margin: "2rem 0rem" }} />
             </section>
             <section>
-                {[1,1,1,1].map(item=><PostCard />)}
+                {tweet.tweet?.replyTweets.map(item => <PostCard item={item} />)}
             </section>
         </div>
     )

@@ -21,7 +21,7 @@ const HomePage = () => {
           <Route path="/" element={<HomeSection/>}></Route>
           <Route path="/home" element={<HomeSection/>}></Route>
           <Route path="profile/:id" element={<Profile />}></Route>
-          <Route path="post/:id" element={<PostDetails />}></Route>
+          <Route path="tweet/:id" element={<PostDetails />}></Route>
         </Routes>
 
       </Grid>

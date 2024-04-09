@@ -1,12 +1,15 @@
 import { Avatar, Button } from '@mui/material'
 import { useFormik } from 'formik'
-import React from 'react'
+import React, { useEffect } from 'react'
 import * as Yup from 'yup';
 import ImageIcon from '@mui/icons-material/Image';
 import { useState } from 'react';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
 import PostCard from './PostCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllTweets } from './../../Store/Tweet/Action';
+import { tweetReducer } from './../../Store/Tweet/Reducer';
 
 const validationSchema = Yup.object().shape({
     content: Yup.string().required("Post text is Required")
@@ -16,11 +19,28 @@ const HomeSection = () => {
 
     const [uploadingImg, setUploadingImg] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
-
+    const {tweet}= useSelector(state=>state);
     const handleSubmit = (values) => {
         console.log("value ", values);
         console.log("imguploading.. ", uploadingImg, " img selected ? ", selectedImage);
     }
+    console.log("tweets ",tweet);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+      dispatch(getAllTweets());
+      
+    }, [tweet.like,tweet.reTweet,tweet.replyTweets])
+
+    useEffect(() => {
+       console.log("tweets ",tweet);
+        
+      }, [tweet])
+
+
+    
+
     const formik = useFormik({
         initialValues: {
             content: "",
@@ -103,7 +123,7 @@ const HomeSection = () => {
                 </div>
             </section>
             <section>
-            {[1,1,1,1].map(item=><PostCard/>)}    
+            {tweet.tweets.map(item=><PostCard item = {item} />)}    
             </section>
 
         </div>

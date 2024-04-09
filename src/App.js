@@ -16,9 +16,9 @@ function App() {
   useEffect(() => {
     
     if(jwt){
-      navigate("/home");
       dispatch(getUserProfile(jwt));
-      console.log(auth.jwt);
+      console.log(auth);
+      navigate("/home");
      
      
     }

@@ -11,6 +11,8 @@ import ImageIcon from '@mui/icons-material/Image';
 import { useState } from 'react';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
+import { useDispatch } from 'react-redux';
+import { createTweetReply } from '../../Store/Tweet/Action';
 
 const style = {
     position: 'absolute',
@@ -29,23 +31,27 @@ const validationSchema = Yup.object().shape({
     content: Yup.string().required("Post text is Required")
 })
 
-export default function ReplyModal({ open, handleClose }) {
+export default function ReplyModal({ open, handleClose, item }) {
+    console.log("item reply modal ", item);
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-   
     const [uploadingImg, setUploadingImg] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
 
     const handleSubmit = (values) => {
         console.log("value ", values);
+        dispatch(createTweetReply(values));
+        
         console.log("imguploading.. ", uploadingImg, " img selected ? ", selectedImage);
+        handleClose();
     }
     const formik = useFormik({
         initialValues: {
             content: "",
             image: "",
-            postId: 4
+            tweetId: item?.id
         },
         onSubmit: handleSubmit,
         validationSchema,
@@ -73,7 +79,7 @@ export default function ReplyModal({ open, handleClose }) {
 
     return (
         <div>
-           
+
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -91,8 +97,11 @@ export default function ReplyModal({ open, handleClose }) {
                         <div className='w-full'>
                             <div className='flex justify-between items-center'>
                                 <div className='flex  cursor-pointer items-center space-x-1'>
-                                    <span className='font-semibold' >{"Ahmed Rashid"}</span>
-                                    <span className="text-gray-600">{"@AhmedRas01 "}</span>
+                                    <span className='font-semibold' >{item?.user?.fullName}</span>
+                                    <span
+                                        className="text-gray-600">
+                                        {'@' + item?.user?.fullName.split(' ').join("_").toLowerCase()}
+                                    </span>
                                     <Verified />
                                     <span>{" . 2m "}</span>
                                 </div>
@@ -100,8 +109,12 @@ export default function ReplyModal({ open, handleClose }) {
 
                             </div>
                             <div className='cursor-pointer'>
-                                <p className='mb-2 p-0'>Full stack project with spring boot and react</p>
-
+                                <p className='mb-2 p-0'>{item?.content}</p>
+                                {item?.image && <img
+                                    className='w-[28rem] border border-gray-400 rounded-lg p-5'
+                                    src={item?.image}
+                                    alt=""
+                                />}
 
                             </div>
 
