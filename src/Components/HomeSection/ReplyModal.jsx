@@ -32,7 +32,7 @@ const validationSchema = Yup.object().shape({
 })
 
 export default function ReplyModal({ open, handleClose, item }) {
-    console.log("item reply modal ", item);
+    //console.log("item reply modal ", item);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -92,7 +92,7 @@ export default function ReplyModal({ open, handleClose, item }) {
                             alt="username"
                             src=""
                             className='cursor-pointer'
-                            onClick={() => navigate(`/profile/${6}`)}
+                            onClick={() => navigate(`/profile/${item?.used?.id}`)}
                         />
                         <div className='w-full'>
                             <div className='flex justify-between items-center'>

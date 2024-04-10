@@ -21,7 +21,8 @@ const PostCard = ({ item }) => {
     const [openReplyModal, setOpenReplyModal] = useState(false);
     const handleOpenReplyModal = () => setOpenReplyModal(true);
     const handleCloseReplyModal = () => setOpenReplyModal(false);
-    console.log("user ", item);
+    console.log(`tweet ${item?.id} : `, item);
+  
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -62,7 +63,7 @@ const PostCard = ({ item }) => {
             <div className='flex space-x-5 mt-4'>
                 <Avatar
                     alt="username"
-                    src={item?.image}
+                    src={item?.user?.image}
                     className='cursor-pointer'
                     onClick={() => navigate(`/profile/${item?.user?.id}`)}
                 />
@@ -75,7 +76,7 @@ const PostCard = ({ item }) => {
                                 {'@' + item?.user?.fullName.split(' ').join("_").toLowerCase()}
                             </span>
                             <Verified />
-                            <span>{item?.createdAt}</span>
+                            <span>{'2m'}</span>
                         </div>
                         <div >
                             <div>

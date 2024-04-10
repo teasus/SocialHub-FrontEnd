@@ -26,6 +26,7 @@ export const authReducer = (state = initialState, action) => {
             return { ...state, loading: false, error: null, user: action.payload };
         case FIND_USER_BY_ID_SUCCESS:
             return { ...state, loading: false, error: null, findUser: action.payload };
+        
 
         case FOLLOW_USER_SUCCESS:
             return { ...state, loading: false, error: null, findUser: action.payload };

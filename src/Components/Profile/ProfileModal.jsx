@@ -5,6 +5,10 @@ import { useFormik } from 'formik';
 import CloseIcon from '@mui/icons-material/Close';
 import { Avatar, IconButton, TextField } from '@mui/material';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { updateUserProfile } from '../../Store/Auth/Action';
+import { uploadToCloudnary } from '../Utils/uploadToCloudnary';
+import { useSelector } from 'react-redux';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -20,12 +24,17 @@ const style = {
 };
 
 
-export default function ProfileModal( {open, handleClose} ) {
+export default function ProfileModal({ open, handleClose }) {
+
+    const dispatch = useDispatch();
+    const { auth } = useSelector(state => state);
+
 
 
     //const handleOpen = () => setOpen(true);
-   // const handleClose = () => setOpen(false);
-    //const [open, setOpen] = useState(false);
+    // const handleClose = () => setOpen(false);
+    const [selectedDpImg, setSelectedDpImg] = useState(null);
+    const [selectedBgImg, setSelectedBgImg] = useState(null);
 
 
 
@@ -33,7 +42,11 @@ export default function ProfileModal( {open, handleClose} ) {
 
 
     const handleSubmit = (values) => {
+        dispatch(updateUserProfile(values));
         console.log("handle submit ", values);
+        handleClose();
+        setSelectedBgImg("");
+        setSelectedDpImg("");
     }
 
     //   formik
@@ -50,12 +63,14 @@ export default function ProfileModal( {open, handleClose} ) {
         onSubmit: handleSubmit
     })
 
-    const handleImgChange = (event) => {
+    const handleImgChange = async (event) => {
         console.log("img change");
         setImageUploading(true);
         const { name } = event.target;
-        const file = event.target.files[0];
+        const file = await uploadToCloudnary(event.target.files[0]);
         formik.setFieldValue(name, file);
+        if(name==="backgroundImage"){setSelectedBgImg(file);}
+        if(name==="image"){setSelectedDpImg(file);}
         setImageUploading(false);
     }
 
@@ -65,7 +80,7 @@ export default function ProfileModal( {open, handleClose} ) {
 
     return (
         <div>
-           
+
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -92,8 +107,8 @@ export default function ProfileModal( {open, handleClose} ) {
                                 <div className='w-full'>
                                     <div className='relative '>
                                         <img className=' w-full h-[14rem] object-cover object-center'
-                                            src='https://cdn.pixabay.com/photo/2024/02/13/22/20/flower-meadow-8572000_640.jpg'
-                                            alt='pic' />
+                                            src={selectedBgImg || auth?.user?.backgroundImage}
+                                            alt='Click to Add a Background image'  />
 
                                         <input type='file' className="cursor-pointer absolute top-0 right-0 left-0 w-full h-full opacity-0"
                                             name='backgroundImage' onChange={handleImgChange}
@@ -104,7 +119,7 @@ export default function ProfileModal( {open, handleClose} ) {
                                 </div>
                                 <div className='w-full transform translate-y-21 ml-4 h-[6rem]'>
                                     <div className=' transform -translate-y-20'>
-                                        <Avatar className=''
+                                        <Avatar className='' src={selectedDpImg || auth?.user?.image}
                                             sx={{ width: "10rem", height: "10rem", border: "10px solid white" }}
                                         />
 
@@ -125,7 +140,9 @@ export default function ProfileModal( {open, handleClose} ) {
                                     helperText={formik.touched.fullName && formik.errors.fullName}
 
                                 />
-                                <TextField fullWidth id="bio" name="bio" label="Bio" size='120'
+                                <TextField fullWidth id="bio" name="bio" label="Bio" size='large'
+                                    multiline={true}
+                                    rows={6}
                                     value={formik.values.bio}
                                     onChange={formik.handleChange}
                                     error={formik.touched.bio && Boolean(formik.errors.bio)}

@@ -18,7 +18,7 @@ const PostDetails = () => {
         if(id){
             dispatch(findTweetsByID(id));
         }
-    }, [[]]
+    }, [tweet.like,tweet.reTweet]
 
     )
 
@@ -43,11 +43,13 @@ const PostDetails = () => {
             </section>
 
             {/* postCard */}
-            <section className=' flex items-center '>
+            <section className=' '>
                 <PostCard item={tweet.tweet} />
-                <Divider sx={{ margin: "2rem 0rem" }} />
+                <Divider sx={{ margin: "1rem 0rem" }} />
             </section>
-            <section>
+            {/*replies */}
+            <h3 className='text-3xl font-bold' >Replies :</h3>
+            <section className='ms-9'>
                 {tweet.tweet?.replyTweets.map(item => <PostCard item={item} />)}
             </section>
         </div>

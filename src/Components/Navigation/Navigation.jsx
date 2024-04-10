@@ -49,7 +49,7 @@ const Navigation = () => {
                 <div className='space-y-6 mt-3 '>
                     {navigationMenu.map((item) =>
                         <div id={item.title} key={item.title} class='flex  space-x-4 cursor-pointer' onClick={() =>
-                            item.title === "Profile" ? navigate(`/profile/${5}`) : navigate(item.path)} >
+                            item.title === "Profile" ? navigate(`/profile/${auth?.user?.id}`) : navigate(item.path)} >
                             {item.icon}
                             <p className='text-xl'>{item.title}</p>
                         </div>
@@ -68,8 +68,8 @@ const Navigation = () => {
             </div>
             <div className=''>
                 <div className='flex items-center w-100 ' >
-                    <div className='flex items-center space-x-3 grow cursor-pointer '  onClick={() => navigate(`/profile/${6}`)} >
-                        <Avatar alt='username' />
+                    <div className='flex items-center space-x-3 grow cursor-pointer '  onClick={() => navigate(`/profile/${auth?.user?.id}`)} >
+                        <Avatar alt='username' src={auth?.user?.image} />
                         <div className='flex-column'  >
                             <p className='text-center'>{auth.user?.fullName}</p>
                             <p className='text-center text-gray-500'>@{auth.user?.fullName.split(' ').join("_").toLowerCase()}</p>
