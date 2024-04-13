@@ -26,7 +26,7 @@ export const navigationMenu= [
     },{
         title:"Messages",
         icon:<MessageIcon/>,
-        path:"/messages"
+        path:"/Chats"
     }
     ,{
         title:"Lists",
