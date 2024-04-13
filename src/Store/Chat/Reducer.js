@@ -7,10 +7,15 @@ const initialState = {
     message: null,
     loading: false,
     error: null,
+    websocketMessage: [],
 }
 export const chatReducer = (state = initialState, action) => {
 
+
     switch (action.type) {
+        case "WEBSOCKET_MESSAGE":
+            return { ...state, loading: false, error: null, websocketMessage: action.payload };
+
         case GET_ALL_MESSAGES_REQUEST:
         case POST_MESSAGE_REQUEST:
         case ADD_CHAT_REQUEST:
@@ -18,7 +23,7 @@ export const chatReducer = (state = initialState, action) => {
         case GET_CHAT_DETAIL_REQUEST:
             return { ...state, loading: true, error: null };
         case POST_MESSAGE_SUCCESS:
-            return { ...state, loading: false, error: null, message: action.payload };
+            return { ...state, loading: false, error: null, messages: [...state.messages, action.payload], message: action.payload };
         case GET_ALL_MESSAGES_SUCCESS:
             return { ...state, loading: false, error: null, messages: action.payload };
         case CHAT_LIST_SUCCESS:
@@ -36,6 +41,7 @@ export const chatReducer = (state = initialState, action) => {
         case CHAT_LIST_FAILURE:
         case GET_CHAT_DETAIL_FAILURE:
             return { ...state, loading: false, error: action.payload }
+
 
 
         default:

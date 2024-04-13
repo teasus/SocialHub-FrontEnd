@@ -24,6 +24,12 @@ export const createNewChat=(withUserId)=> async (dispatch)=>{
     }
 }
 
+export const websocketMessage = (messages)=> async (dispatch)=>{
+   
+    console.log("websocketMessage : ", messages);
+    dispatch({type:"WEBSOCKET_MESSAGE",payload : messages});
+}
+
 export const getChatDetailsById=(chatId)=> async (dispatch)=>{
     try {
         const {data}= await api.get(`api/chat/${chatId}`);
@@ -36,9 +42,9 @@ export const getChatDetailsById=(chatId)=> async (dispatch)=>{
 }
 
 
-export const createAMessage=(data,chatId)=> async (dispatch)=>{
+export const createAMessage=(datas,chatId)=> async (dispatch)=>{
     try {
-        const {data}= await api.post(`/api/message/send/${chatId}`,data);
+        const {data}= await api.post(`/api/message/send/${chatId}`,datas);
         console.log("create A Message : ", data);
         dispatch({type: POST_MESSAGE_SUCCESS,payload : data});
     } catch (error) {

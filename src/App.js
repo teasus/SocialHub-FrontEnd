@@ -6,6 +6,7 @@ import Authentication from './Components/Authentication/Authentication';
 import { useDispatch,useSelector } from 'react-redux';
 import { authReducer } from './Store/Auth/Reducer';
 import { store } from './Store/Store';
+import "react-chat-elements/dist/main.css";
 import { getUserProfile } from './Store/Auth/Action';
 function App() {
   const dispatch = useDispatch();

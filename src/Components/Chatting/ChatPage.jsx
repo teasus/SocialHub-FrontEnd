@@ -1,58 +1,101 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getAllMessages, getChatDetailsById } from '../../Store/Chat/Action';
+import { createAMessage, getAllMessages, getChatDetailsById, websocketMessage } from '../../Store/Chat/Action';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import { Grid, Avatar } from '@mui/material';
+import { Grid, Avatar, Button } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
-import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import Divider from '@material-ui/core/Divider';
-import TextField from '@material-ui/core/TextField';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Fab from '@material-ui/core/Fab';
-import SendIcon from '@material-ui/icons/Send';
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-  chatSection: {
-    width: '100%',
-    height: '80vh'
-  },
-  headBG: {
-    backgroundColor: '#e0e0e0'
-  },
-  borderRight500: {
-    borderRight: '1px solid #e0e0e0'
-  },
-  messageArea: {
-    height: '70vh',
-    overflowY: 'auto'
-  }
-});
+import { MessageBox, ChatItem } from "react-chat-elements"
+import { useFormik } from 'formik';
+import ImageIcon from '@mui/icons-material/Image';
+import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import TagFacesIcon from '@mui/icons-material/TagFaces';
+import * as Yup from 'yup';
+import { uploadToCloudnary } from '../Utils/uploadToCloudnary';
+import SockJS from 'sockjs-client';
+import { over } from 'stompjs';
+const validationSchema = Yup.object().shape({
+  content: Yup.string().required("Post text is Required")
+})
 const ChatPage = () => {
-  const classes = useStyles();
+  const [uploadingImg, setUploadingImg] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const dispatch = useDispatch();
-  const { chats } = useSelector(state => state);
+  const { auth, chats } = useSelector(state => state);
   const navigate = useNavigate();
   const { id } = useParams();
   const handleBack = () => navigate(-1);
 
+  const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'auto', block: 'end', inline: 'end' });
+    }
+  };
+
+  const handleSubmit = (values, actions) => {
+
+    console.log("value ", values);
+    console.log("imguploading.. ", uploadingImg, " img selected ? ", selectedImage);
+    dispatch(createAMessage({ ...values, image: selectedImage ? values.image : null }, id));
+    setSelectedImage(null);
+    actions.resetForm();
+    scrollToBottom();
+
+    setUploadingImg(false);
+
+  }
+
+  const formik = useFormik({
+    initialValues: {
+      content: "",
+      image: ""
+    },
+    onSubmit: handleSubmit,
+    validationSchema,
+  })
+
+  //select image 
+  const handleSelectImage = async (event) => {
+    setUploadingImg(true);
+    const imgUrl = await uploadToCloudnary(event.target.files[0]);
+    formik.setFieldValue("image", imgUrl);
+    setSelectedImage(imgUrl);
+    setUploadingImg(false);
+  }
+
+
   useEffect(() => {
     dispatch(getChatDetailsById(id));
     dispatch(getAllMessages(id));
+    messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
 
 
   }, [])
+
+  useEffect(() => {
+    dispatch(getAllMessages(id));
+    messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+
+
+  }, [chats?.message])
+
+
+
+
+
+
+
+
+
+
+
+
   return (
-    <div>
+    <div style={{}} >
       <section className={`z-50 flex items-center sticky top-0 bg-opacity-95`}>
 
 
@@ -90,97 +133,113 @@ const ChatPage = () => {
         </Paper>
       </section>
 
-      <section>
-        <div>
-          <Grid container>
-            <Grid item xs={12} >
-              <Typography variant="h5" className="header-message">Chat</Typography>
-            </Grid>
-          </Grid>
-          <Grid container component={Paper} className={classes.chatSection}>
-            <Grid item xs={3} className={classes.borderRight500}>
-              <List>
-                <ListItem button key="RemySharp">
-                  <ListItemIcon>
-                    <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" />
-                  </ListItemIcon>
-                  <ListItemText primary="John Wick"></ListItemText>
-                </ListItem>
-              </List>
-              <Divider />
-              <Grid item xs={12} style={{ padding: '10px' }}>
-                <TextField id="outlined-basic-email" label="Search" variant="outlined" fullWidth />
-              </Grid>
-              <Divider />
-              <List>
-                <ListItem button key="RemySharp">
-                  <ListItemIcon>
-                    <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" />
-                  </ListItemIcon>
-                  <ListItemText primary="Remy Sharp">Remy Sharp</ListItemText>
-                  <ListItemText secondary="online" align="right"></ListItemText>
-                </ListItem>
-                <ListItem button key="Alice">
-                  <ListItemIcon>
-                    <Avatar alt="Alice" src="https://material-ui.com/static/images/avatar/3.jpg" />
-                  </ListItemIcon>
-                  <ListItemText primary="Alice">Alice</ListItemText>
-                </ListItem>
-                <ListItem button key="CindyBaker">
-                  <ListItemIcon>
-                    <Avatar alt="Cindy Baker" src="https://material-ui.com/static/images/avatar/2.jpg" />
-                  </ListItemIcon>
-                  <ListItemText primary="Cindy Baker">Cindy Baker</ListItemText>
-                </ListItem>
-              </List>
-            </Grid>
-            <Grid item xs={9}>
-              <List className={classes.messageArea}>
-                <ListItem key="1">
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <ListItemText align="right" primary="Hey man, What's up ?"></ListItemText>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <ListItemText align="right" secondary="09:30"></ListItemText>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <ListItem key="2">
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <ListItemText align="left" primary="Hey, Iam Good! What about you ?"></ListItemText>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <ListItemText align="left" secondary="09:31"></ListItemText>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <ListItem key="3">
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <ListItemText align="right" primary="Cool. i am good, let's catch up!"></ListItemText>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <ListItemText align="right" secondary="10:30"></ListItemText>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-              </List>
-              <Divider />
-              <Grid container style={{ padding: '20px' }}>
-                <Grid item xs={11}>
-                  <TextField id="outlined-basic-email" label="Type Something" fullWidth />
-                </Grid>
-                <Grid xs={1} align="right">
-                  <Fab color="primary" aria-label="add"><SendIcon /></Fab>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
+      <section style={{ height: selectedImage ? '65vh' : '70vh', overflow: 'scroll' }}>
+        {chats?.websocketMessage?.map((messagesw) =>
+          !messagesw?.multiMedia?
+            <MessageBox
+              position={auth?.user?.fullName === messagesw?.user?.fullName ?
+                "right" : "left"}
+              title={messagesw?.user.fullName}
+              type='text'
+              text={messagesw?.content}
+              date={messagesw?.createdAt}
+              replyButton={true}
+            />
+            :
+            <MessageBox
+              position={auth?.user?.fullName === messagesw?.user?.fullName ?
+                "right" : "left"}
+              title={messagesw?.user.fullName}
+              type='photo'
+              text={messagesw?.content}
+              data={{
+                uri: `${messagesw?.image}`,
+                width:500,height:500
+              }}
+              date={new Date()}
+              replyButton={true}
+            />
+
+        )}
+        <div ref={messagesEndRef} />
+
+
+      </section>
+
+      <section className='pb-2' >
+        <div className='flex flex-col' >
+          <div className='flex space-x-5'>
+
+
+            <div className='w-full'>
+              {selectedImage &&
+                <div className='flex align-middle text-center  ' >
+                  <div className=' bg-slate-100' style={{
+                    border: "1px solid gray", width: "220"
+                  }} >
+                    {selectedImage && <img src={selectedImage} height={120} width={120} alt='' />}
+                  </div>
+                </div>
+              }
+
+              <form onSubmit={formik.handleSubmit}>
+                <div>
+                  <input type='text' name='content' placeholder='type a message.....'
+                    className='border-none outline-none text-xl bg-transparent '
+                    {...formik.getFieldProps("content")}
+                  />
+
+
+                </div>
+
+
+                <div className='flex justify-between items-center mt-4'>
+                  {/* img upload */}
+                  <div className='flex space-x-5 items-center'>
+
+                    <label className='flex items-center space-x-2 rounded-md cursor-pointer' >
+                      <ImageIcon className='text-[#22D663]' />
+                      <input
+                        type='file'
+                        name="imageFile"
+                        className='hidden'
+                        onChange={handleSelectImage} />
+                    </label>
+
+                    <FmdGoodIcon className='text-[#22D663]' />
+                    <TagFacesIcon className='text-[#22D663]' />
+
+                  </div>
+
+
+                  <div>
+                    <Button className='BtnCr'
+                      type='submit'
+
+
+                      sx={{
+                        width: "100%",
+                        borderRadius: "29px",
+                        py: "8px", px: '20px',
+                        bgcolor: "#22D663"
+                      }}
+                      variant='contained'>
+                      SEND
+                    </Button>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+
+          </div>
+
         </div>
 
       </section>
+
+
+
 
     </div>
   )

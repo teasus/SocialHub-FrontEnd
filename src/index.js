@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './Store/Store';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-
+import "react-chat-elements/dist/main.css";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
