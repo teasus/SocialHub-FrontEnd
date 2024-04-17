@@ -27,7 +27,7 @@ const Profile = () => {
     var fullDate = day + "-" + (month + 1) + "-" + year;
     const { id } = useParams();
     const dispatch = useDispatch();
-    const { auth,tweet } = useSelector(state => state);
+    const { auth, tweet } = useSelector(state => state);
 
     const [openProfileModal, setOpenProfileModal] = useState(false);
     const handleOpenProfileModal = () => setOpenProfileModal(true);
@@ -44,9 +44,14 @@ const Profile = () => {
     useEffect(() => {
         dispatch(findUserById(id));
         dispatch(getUserTweets(id));
-    }, [],[auth.user])
+    }, [auth.user, id])
 
 
+
+    useEffect(() => {
+        dispatch(findUserById(id));
+        dispatch(getUserTweets(id));
+    }, [])
 
 
 
@@ -74,7 +79,7 @@ const Profile = () => {
             <section className={`z-50 flex items-center sticky top-0 bg-opacity-95`}>
                 <KeyboardBackspaceIcon className='cursor-pointer' onClick={handleBack} />
                 <h1 className='py-5 text-xl font-bold opacity-90 ml-5'>Profile</h1>
-                <h1 className='py-5 text-xl font-bold opacity-90 ml-5'>Profile</h1>
+
             </section>
 
             <section>
@@ -125,13 +130,13 @@ const Profile = () => {
 
                     </div>
                     <div className='flex items-center space-x-5 '>
-                        <div className='flex items-center space-x-1 '>
+                        <div className='flex items-center space-x-1 cursor-pointer' onClick={() => navigate(`/lists/Followers/${id}`)} >
 
                             <span>{auth?.findUser?.followers.length}</span>
                             <span>Followers</span>
 
                         </div>
-                        <div className='flex items-center space-x-1 '>
+                        <div className='flex items-center space-x-1 cursor-pointer' onClick={() => navigate(`/lists/Followings/${id}`)}  >
 
                             <span>{auth?.findUser?.following.length}</span>
                             <span>Following</span>

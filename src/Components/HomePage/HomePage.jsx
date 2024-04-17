@@ -12,6 +12,7 @@ import ChatList from '../Chatting/ChatList';
 import ChatPage from '../Chatting/ChatPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { websocketMessage } from '../../Store/Chat/Action';
+import FollowersList from '../Profile/FollowersList';
 const HomePage = () => {
   const dispatch = useDispatch();
   const { auth, chats } = useSelector(state => state);
@@ -50,7 +51,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (chats?.message && stompClient) {
-      setMessages([...messages, chats.message]);
+       
       console.log(chats.message);
       stompClient?.send("/app/message", {}, JSON.stringify(chats.message))
     }
@@ -109,6 +110,7 @@ const HomePage = () => {
               <Route path="tweet/:id" element={<PostDetails />}></Route>
               <Route path="chats" element={<ChatList />}></Route>
               <Route path="/chat/:id" element={<ChatPage />}></Route>
+              <Route path="/lists/:type/:id" element={<FollowersList />}></Route>
             </Routes>
 
           </Grid>

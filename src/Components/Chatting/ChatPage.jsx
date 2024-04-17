@@ -115,7 +115,8 @@ const ChatPage = () => {
             <Grid item>
               <KeyboardBackspaceIcon className='cursor-pointer me-5' onClick={handleBack} />
               <ButtonBase sx={{ width: 80, height: 80 }}>
-                <Avatar alt='username' src={chats?.chat?.chatImage} />
+                <Avatar onClick={() => navigate(`/profile/${id}`)} 
+                alt='username' src={chats?.chat?.chatImage} />
               </ButtonBase>
             </Grid>
             <Grid item xs={12} sm container>
